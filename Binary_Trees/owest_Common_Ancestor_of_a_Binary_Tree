@@ -1,0 +1,51 @@
+// Brute Force
+class Solution {
+public:
+    bool findPath(TreeNode* root, TreeNode* tar, vector<TreeNode*>& v){
+        if(root==tar){
+            v.push_back(root);
+            return true;
+        }
+        v.push_back(root);
+        if(root->left){
+            if(findPath(root->left,tar,v)) return true;
+            v.pop_back();
+        }
+        if(root->right){
+            if(findPath(root->right,tar,v)) return true;
+            v.pop_back();
+        }
+        return false;
+    }
+    
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        vector<TreeNode*> v1,v2;
+        findPath(root,p,v1);
+        findPath(root,q,v2);
+        int ind = 0;
+        int n = v1.size(), m = v2.size();
+        int i=0;
+        for(i=0;i<min(n,m);i++){
+            if(v1[i]!=v2[i]){
+                break;
+            }
+        }
+        return v1[i-1];
+    }
+};
+
+// Optimized
+// This works fine if both the nodes are present, or else we just maintain two variables to find whether we visited the given two nodes.
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(root==NULL || root==p || root==q) return root;
+        TreeNode* l = lowestCommonAncestor(root->left,p,q);
+        TreeNode* r = lowestCommonAncestor(root->right,p,q);
+        if(l==NULL) return r;
+        if(r==NULL) return l;
+        return root; // both are NULL, we found ans.
+    }
+};
+
+// https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/
