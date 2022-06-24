@@ -20,4 +20,28 @@ public:
     }
 };
 
+class Solution {
+public:
+    int ps = 0;
+    TreeNode* solve(int is, int ie, vector<int>& pre, unordered_map<int,int>& m){
+        if(is>ie) return NULL;
+        TreeNode* root = new TreeNode(pre[ps]);
+        int ind = m[pre[ps]];
+        ps++;
+        root->left = solve(is,ind-1,pre,m);
+        root->right = solve(ind+1,ie,pre,m);
+        return root;
+    }
+    
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        int n = preorder.size();
+        unordered_map<int,int> m;
+        for(int i=0;i<n;i++){
+            m[inorder[i]] = i;
+        }
+        ps = 0;
+        return solve(0,n-1,preorder,m);
+    }
+};
+
 // https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
